@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <style>
+        .styleClass {
+            color: red;
+        }
+
+        .tbClass {
+            font-family: serif;
+            font-weight: 100;
+            color: aqua;
+
+        }
+    </style>
+</head>
+
+<body>
+    <script src="../learner/vue.js"></script>
+    <script src="../learner/vueTest.js"></script>
+
+    <!-- 课后作业 -->
+    <div id="example2">
+        <ul>
+            <!-- 取class中的属性为style 样式设置时，需要添加'' ，也可以用对象形式 键值对赋值，属性是否可显示，后加上bool值而变-->
+            <!-- v-bind 的class 属性值 绑定方式：对象语法、数组语法 -->
+            <!-- <li v-for="item in movies" :class="'styleClass'" :class="{styleClass:styleBool}">{{item}}</li> -->
+            <!-- <li v-for="item in movies" :class="['styleClass','tbClass']">{{item}}</li> -->
+            <li v-for="(item,index) in movies" :key="index" :class="{styleClass:index===s1}"
+                @click="colorChange(index)">{{item}}</li>
+        </ul>
+    </div>
+    <!-- v-bind:style和计算属性 -->
+    <div id="example3">
+        <!-- v-bind style 属性值 绑定方式：对象语法、数组语法 -->
+        <!-- <h6 :style="{background:'red',width:'100px',height:bgheight+'px'}">tttttfff</h6> -->
+        <h6 :style="[a,b]">tttttfff</h6>
+        <!-- 计算属性，fullname 虽然是方法结构，但在计算属性中，不需要加() fullName 是属性  fullname里有get和set方法，set方法一般不用，只读属性-->
+        <!-- 用计算属性比methods 方法性能更高，多次渲染只加载一次，存有缓存，方法是调用一次就查一次 -->
+        <span>{{fullName}}</span>
+    </div>
+    <script>
+        const example2 = new Vue({
+            // el: '#example2',
+            data: {
+                //data属性中参数赋值用：不是=  : 赋值
+                movies: ['奥铃', '欧马可', '蒙派克风景', '随车行', '拓路者萨普'],
+                s1: 0
+            },
+            methods: {
+                colorChange(index) {
+                    this.s1 = index;
+                }
+            }
+        }).$mount('#example2')
+        const exap = new Vue({
+            data: {
+                bgheight: 100,
+                b: { backgroundColor: 'blue' },
+                a: {
+                    color: 'red',
+                    width: '100px'
+                },
+
+                firstName: "kobel",
+                lastName: "bran"
+            },
+            methods: {
+            },
+            computed: {
+                fullName() {
+                    return this.firstName + " " + this.lastName;
+                }
+            }
+        }).$mount('#example3')
+    </script>
+
+</body>
+
+</html>
