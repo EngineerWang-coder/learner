@@ -20,7 +20,19 @@
 <body>
     <script src="../learner/vue.js"></script>
     <script src="../learner/vueTest.js"></script>
-
+    vue初体验
+<div id="app">
+    <h6>在li里循环，v-for写在li里</h6>
+    <h6>双大括号取值是一种html的模版语法，具体很多框架都会用到</h6>
+    <ul>
+        <li v-for="item in movies">{{item}}</li>
+    </ul>
+</div>
+   <div id="example1">
+    <h6>当前计数：{{counter}}</h6>
+    <button v-on:click="Add">+</button>
+    <button @click="Sub">-</button>
+</div> 
     <!-- 课后作业 -->
     <div id="example2">
         <ul>
@@ -41,7 +53,60 @@
         <!-- 用计算属性比methods 方法性能更高，多次渲染只加载一次，存有缓存，方法是调用一次就查一次 -->
         <span>{{fullName}}</span>
     </div>
+<!--v-on 的参数-->
+<div id="example5">
+    <!--当调用当方法没有参数时，省略括号-->
+    <!--<button @click="getdivClick()">+</button>-->
+    <button @click="getdivClick">+</button>
+    <!--当不传入参数不加括号时，方法带有参数默认带入event事件-->
+    <button @click="getclick($event)">+</button>
+    <button @click="clicktext">+</button>
+    <!--当有多个参数传入，且event事件也需要传入时，$event 写法传入-->
+    <!--<button @click="getclickevent($event)">+</button> 未传入普通参数，参数个数对应不上，undefined-->
+    <button @click="getclickevent('sds',$event)">+</button>
+</div>
+<!-- v-on 修饰符 stop prevent keyup ..-->
+<div id="example4" @click="getdivClick">
+    <!--v-on 修饰符stop ：只执行此处click事件，不执行div中绑定的事件 用stop-->
+    <h1 @click.stop="getclick">测试</h1>
+<br>
+<form action="baidu">
+    <!--v-on 的修饰符 prevent： 阻止默认行为，现在不需要点按钮就提交，自己需要提交时才提交 用prevent -->
+ <input type="submit" @click.prevent="submitclick" value="提交">
+    <!--修饰符也可以串联使用-->
+    <input type="submit" @click.stop.prevent="submitclick" value="提交">
+ </form>
+<!--v-on 的修饰符：当键盘放开时，添加一个事件 用keyup (举例按下enter按键时，添加方法)  键盘按键按下时，添加事件，用keydown-->
+ <input type="text" @keyup.enter="getkeyup" >
+    <!--v-on once 只触发一次-->
+</div>
     <script>
+        const appdata=new Vue({
+         el:'#app',//获取id为app的元素
+         data:{//定义数据
+             message:'你好',
+             movies:["东成西就","大话西游","少年派","星际大战"]
+
+         }
+     })
+        const obj={
+        counter: 1//变量写到html中必须使用{{ }}
+    };//model 层
+    const countfor=new Vue({
+        //el:"#example1",
+        el:document.querySelector(app),
+        data:obj,
+        methods:{
+            Add(){
+                console.log("当前计数加1");
+                this.counter++;//this这里的取值就是当前count这个区域块的
+            },
+            Sub:function (){//button按钮中@click是v-on:click的语法糖，就是简写
+                console.log("当前计数加1");
+                this.counter--;
+            }
+        }
+    })
         const example2 = new Vue({
             // el: '#example2',
             data: {
@@ -75,6 +140,39 @@
                 }
             }
         }).$mount('#example3')
+        
+     const examp=new Vue({
+         methods:{
+             getdivClick(){
+                 console.log("div");
+             },
+             getclick(){
+                 console.log("h1");
+             },
+             submitclick(){
+                 console.log("submitclick");
+             },
+             getkeyup(){
+                 console.log("阿");
+             }
+         }
+     }).$mount("#example4")
+     const exampex=new Vue({
+         methods:{
+             getdivClick(){
+                 console.log("div");
+             },
+             getclick(event){
+                 console.log(event);
+             },
+             clicktext(name){
+                 console.log(name);
+             },
+             getclickevent(name,event){
+                 console.log("+++++++",name,event)
+             }
+         }
+     }).$mount("#example5")
     </script>
 
 </body>
