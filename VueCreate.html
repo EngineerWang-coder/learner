@@ -66,8 +66,8 @@
         <!--<button @click="getclickevent($event)">+</button> 未传入普通参数，参数个数对应不上，undefined-->
         <button @click="getclickevent('sds',$event)">+</button>
     </div>
-    <!-- v-on 修饰符 stop prevent keyup ..-->
-    <div id="example4" @click="getdivClick">
+    <!-- v-on 修饰符 stop prevent keyup once..-->
+    <div id="example4" @click="getdivClick" v-if=false>
         <!--v-on 修饰符stop ：只执行此处click事件，不执行div中绑定的事件 用stop-->
         <h6 @click.stop="getclick">测试</h6>
         <br>
@@ -80,6 +80,41 @@
         <!--v-on 的修饰符：当键盘放开时，添加一个事件 用keyup (举例按下enter按键时，添加方法)  键盘按键按下时，添加事件，用keydown-->
         <input type="text" @keyup.enter="getkeyup">
         <!--v-on once 只触发一次-->
+    </div>
+
+    <!-- v-if 和v-show  区别-->
+    <div id="example6">
+        <!-- 用参数labelshow传递<label>是否能显示时，v-else就是相反的显示 -->
+        <label v-if="labelshow">aaaa</label>
+        <!-- <label v-else id="aa">bbbb</label> -->
+        <!-- v-if 和v-show 传入false 时，v-show的是给元素增加一个行内样式display:none,v-if是这个元素都不会存在在dom中 -->
+        <!-- 当页面频繁切换是否可见时用v-show，页面只切换一次时用v-if -->
+        <label v-show="labelshow">aaaa</label>
+    </div>
+    <!-- 用户名/邮箱登录切换设置 案例-->
+    <div id="example7" v-if=false>
+        <!-- 用v-if和v-else来控制用户名显示还是邮箱，但输入框中输入信息后切换不能清空切换前输入框中的信息，需要添加不同值的key ,key的值要不同 -->
+        <!-- Vue在dom 渲染时，由于性能考虑，会尽可能的 复用 已经存在的元素，不会渲染新的元素 -->
+        <!-- placeholder 输入字段的提示信息 -->
+        <span v-if="spanshow">
+            <label>用户名</label>
+            <input type="text" key="username" placeholder="用户名">
+        </span>
+        <span v-else>
+            <label>邮箱</label>
+            <input type="text" key="email" placeholder="邮箱">
+        </span>
+        <button id="sebutton" @click="getdiff">切换登录</button>
+    </div>
+
+    <!-- v-for 也是可以用对象、数组来遍历 -->
+    <!-- 数组中响应式的方法 push(元素后增加)\splice（从哪个位置开始，删除几个元素，替换的元素）（splice可以替换元素、删除元素、新增元素 重点） -->
+    <div id="example8" v-if="false">
+        <ul>
+            <!-- 获取value,key,index 的顺序 (value,key,index) -->
+            <!-- <li v-for="(value,key,index) in movies" @click="getindex(key)">{{value}}--{{key}}--{{index}}</li> -->
+            <li v-for="value in movies" @click="increment">{{value}}</li>
+        </ul>
     </div>
     <script>
         const appdata = new Vue({
@@ -173,6 +208,44 @@
                 }
             }
         }).$mount("#example5")
+         const text6 = new Vue({
+            data: {
+                labelshow: false
+            }
+        }).$mount("#example6")
+        const exdata = new Vue({
+            data: {
+                spanshow: true
+            },
+            methods: {
+                getdiff() {
+                    this.spanshow = !this.spanshow;
+                }
+            }
+        }).$mount("#example7")
+        const exd = new Vue({
+            data: {
+                //对象、数组去遍历
+                // movies: {name:'奥铃', product:'欧马可', branch:'蒙派克风景',company: '随车行', load:'拓路者萨普'},
+                movies: ['奥铃', '欧马可', '蒙派克风景', '随车行', '拓路者萨普', 1, 2, 3, 4, 5],
+            },
+            methods: {
+                getindex(index) {
+                    console.log(index);
+                },
+                increment() {
+                    // this.movies.push("测试"); 在最后增加元素
+                    // this.movies.pop();删除最后一个元素
+                    // this.movies.shift();删除第一个元素
+                    // this.movies.unshift("测试赛");在第一个元素前增加元素
+                    // this.movies.splice(1,2,"测试")//从第一位开始，后面两位删除，新增“测试”元素，替换
+                    // this.movies.splice(1,0,"测试")//从第一位开始，不删除，新增“测试”元素，增加
+                    // this.movies.splice(1,1)//从第一位开始，删除一位，删除
+                    this.movies.sort();//排序,顺序
+                    // this.movies.reverse();//倒序
+                }
+            }
+        }).$mount('#example8')
     </script>
 
 </body>
