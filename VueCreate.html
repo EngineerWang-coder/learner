@@ -151,46 +151,55 @@
 
   <!-- 内容模板抽离 -->
   <template id="buete">
-    <div>
+    <span>
       <h5> ceshi</h5>
-    </div>
+      <h6>{{message}}</h6>
+    </span>
   </template>
-  <!-- 自定义组件 -->
+  <!-- 内容模板抽离的两种方式，<template>，<script type> -->
+  <script type="text/x-template" id="clickcount">
+    <button @click="counter++">点击了{{counter}}下</button>
+  </script>
+  <!-- 自定义组件 局部组件只能在“buttoncpn”这个区域-->
   <div id="buttoncpn">
     <dev-cpn></dev-cpn>
+    <!-- 全局组件可以放到任何div中 -->
+    <button-counter></button-counter>
+    <cpnex></cpnex>
+    <blog-post post-title="hello!"></blog-post>
   </div>
+  
   <script>
-    let ad = "dr";
-    //全局组件
-    Vue.component('button-counter', {
-      template: "#buete"//内容模板元素，抽离到html 中
+    //全局组件 全局变量必须放置到vue实例前
+    Vue.component('button-counter', {//语法糖，将extend省略直接放到component
+      template: "#buete",//内容模板元素，抽离到html 中
+      data() {
+        return { message: "112233" }
+      }
+    })
+    Vue.component('cpnex',{
+        data() {
+            return { counter: 0 }
+        },
+        template: `<button @click="counter++">点击了{{counter}}下</button>`
     })
     Vue.component('blog-post', {
       props: ['postTitle'],
-      template: '<h3>{{ postTitle }}</h3>'
+      template: '<h3>{{postTitle}} </h3>'
     })
-    const devscpn = {
-      template: `<button >点击了下</button>`
-    }
+    //局部组件 写在对应VUE实例中 components
     const ionComponent = new Vue({
-      data: {
-        counter: 0
-      },
-      components: {
-        props: ['counter'],
-
-        'dev-cpn': devscpn
+      components: {//vue中component属性，'dev-cpn'组件名称后接对象，获取template，data属性data需要赋值回调函数
+        'dev-cpn': {
+          template: "#clickcount",
+          data() {
+            return {
+              counter: 0
+            }
+          }
+        }
       }
     }).$mount("#buttoncpn")
-    // const ionComponent = Vue.createApp({})
-    // ionComponent.component('button-counter', {
-    //     data() {
-    //         return {
-    //             counter: 0
-    //         }
-    //     },
-    //     template: `<button @click="counter++">点击了{{counter}}下</button>`
-    // }).mount("#comp-demo")
 
     //v-model 双向绑定 
     const selectmodel = new Vue({
